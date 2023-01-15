@@ -6,6 +6,16 @@ declare module "styled-components" {
 			main: string;
 			second: string;
 			third: string;
+			white: string;
+			lightgray: string;
+		};
+		fontSize: {
+			sm: string;
+			md: string;
+			lg: string;
+			xl: string;
+			xxl: string;
+			title: string;
 		};
 	}
 }
