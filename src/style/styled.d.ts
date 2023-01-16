@@ -1,21 +1,23 @@
-import "styled-components";
-
-declare module "styled-components" {
+// import "styled-components";
+declare module "@mui/material/styles" {
 	export interface Theme {
-		colors: {
-			main: string;
-			second: string;
-			third: string;
-			white: string;
-			lightgray: string;
+		palette: {
+			primary: {
+				main: string;
+				dark: string;
+			};
 		};
-		fontSize: {
-			sm: string;
-			md: string;
-			lg: string;
-			xl: string;
-			xxl: string;
-			title: string;
+		secondary: {
+			main: string;
+		};
+		typography: {
+			h1: { fontSize: string };
+			body1: {
+				fontSize: string;
+			};
+			body2: {
+				fontSize: string;
+			};
 		};
 	}
 }
