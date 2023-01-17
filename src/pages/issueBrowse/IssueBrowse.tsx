@@ -20,6 +20,13 @@ const IssueBrowse = () => {
 
 	useEffect(() => {
 		setBookmarkedByString(getLocalStorage("bookmarkedRepos"));
+		if (bookmarkedArray === null || bookmarkedArray?.length === 0) {
+			setHasBookmarkedRepo(false);
+			setIssueList([]);
+			setTotalPage(0);
+			setCurrentPage(1);
+			setIsIssueCardLoaded(false);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -122,7 +129,9 @@ const IssueBrowse = () => {
 				</RepoButtonBox>
 
 				<IssueBox>
-					{!hasBookmarkedRepo && <EmptyBox>북마크 된 레포가 없어요!</EmptyBox>}
+					{!hasBookmarkedRepo && (
+						<EmptyBox>북마크된 레포지토리가 없어요!</EmptyBox>
+					)}
 
 					{hasBookmarkedRepo &&
 						(isIssueCardLoaded && issueList.length === 0 ? (
@@ -131,7 +140,10 @@ const IssueBrowse = () => {
 							[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => {
 								return (
 									<SkeletonBox key={`skeleton-${item}`}>
-										<Skeleton variant="rounded" width={340} height={100} />
+										<Skeleton
+											variant="rounded"
+											style={{ width: "100%", height: "10rem" }}
+										/>
 									</SkeletonBox>
 								);
 							})
@@ -143,10 +155,12 @@ const IssueBrowse = () => {
 							})
 						))}
 				</IssueBox>
-				<PaginationBar
-					totalPage={totalPage}
-					handlePageChange={handlePageChange}
-				/>
+				{hasBookmarkedRepo && issueList && (
+					<PaginationBar
+						totalPage={totalPage}
+						handlePageChange={handlePageChange}
+					/>
+				)}
 			</Inner>
 		</Container>
 	);
