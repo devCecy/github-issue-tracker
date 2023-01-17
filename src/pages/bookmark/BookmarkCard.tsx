@@ -1,30 +1,20 @@
-import { setLocalStorage } from "src/utils/util";
-import { bookmarkState } from "src/atom/bookmarkState";
-import { useSetRecoilState } from "recoil";
+import useBookmarkDelete from "src/hooks/useBookmarkDelete";
 
 // style
 import styled from "styled-components";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { Button } from "@mui/material";
 
-const BookmarkCard = ({ bookmarkedArray, repo }: any) => {
-	const setBookmarkedByString = useSetRecoilState(bookmarkState);
+const BookmarkCard = ({ repo }: any) => {
+	const handleBookmarkDelete = useBookmarkDelete();
 
-	const handleBookmarkDelete = (e: any) => {
-		const newBookmarkList = bookmarkedArray.filter(
-			(el) => el !== e.currentTarget.id
-		);
-		setLocalStorage("bookmarkedRepos", JSON.stringify(newBookmarkList));
-		setBookmarkedByString(JSON.stringify(newBookmarkList));
-	};
 	return (
 		<CardContainer>
 			<Button>
 				<BookmarkIcon
 					id={repo}
 					fontSize="large"
-					color="inherit"
-					onClick={handleBookmarkDelete}
+					onClick={(e) => handleBookmarkDelete(e.currentTarget.id)}
 				/>
 			</Button>
 			<Title>{repo}</Title>
