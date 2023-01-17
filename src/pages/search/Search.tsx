@@ -1,17 +1,20 @@
 import axios from "axios";
 import { BASE_URL, TOKEN } from "src/utils/environment";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { SearchResult } from "src/interfaces/search";
 
 // style
 import styled from "styled-components";
 import { FormControl, InputAdornment, OutlinedInput } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+
+// components
 import SearchCard from "./SearchCard";
 import PaginationBar from "src/components/PaginationBar";
-import { useEffect } from "react";
 
 const Search = () => {
-	const [searchResult, setSearchResult] = useState([]);
+	const [searchResult, setSearchResult] = useState<SearchResult[]>([]);
 	const [searchValue, setSearchValue] = useState("");
 	const [totalResultCount, setTotalResultCount] = useState(0);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -37,7 +40,7 @@ const Search = () => {
 	 * 인풋에 작성되는 검색어를 저장합니다.
 	 * @param e
 	 */
-	const handleSearch = (e) => {
+	const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchValue(e.target.value);
 	};
 
@@ -45,7 +48,9 @@ const Search = () => {
 	 * 인풋폼을 제출합니다.
 	 * @param e
 	 */
-	const handleSearchSubmit = (e) => {
+	const handleSearchSubmit = (
+		e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLOrSVGElement>
+	) => {
 		e.preventDefault();
 		setIsFormSubmitted(true);
 		setCurrentPage(1);

@@ -3,13 +3,22 @@ import { Pagination } from "@mui/material";
 import styled from "styled-components";
 import useViewport from "src/hooks/useViewport";
 
+interface PaginationProps {
+	totalPage: number;
+	handlePageChange: (page: number) => void;
+	isChanged: boolean;
+}
 /**
  * 공통 페이지네이션 바
  * @param totalPage : 총 페이지 수
  * @param handlePageChangee : 페이지 전환 함수
  * @returns
  */
-const PaginationBar = ({ totalPage, handlePageChange, isChanged }: any) => {
+const PaginationBar = ({
+	totalPage,
+	handlePageChange,
+	isChanged,
+}: PaginationProps) => {
 	const isMobile = useViewport();
 	const [page, setPage] = useState(1);
 

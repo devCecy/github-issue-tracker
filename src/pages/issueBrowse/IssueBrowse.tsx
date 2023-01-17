@@ -114,7 +114,7 @@ const IssueBrowse = () => {
 			<Inner>
 				<Title>이슈 모아보기</Title>
 				<RepoButtonBox>
-					{bookmarkedArray?.map((repo) => {
+					{bookmarkedArray?.map((repo: string) => {
 						return (
 							<Chip
 								key={repo}

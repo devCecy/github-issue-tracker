@@ -5,7 +5,7 @@ import styled from "styled-components";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { Button } from "@mui/material";
 
-const BookmarkCard = ({ repo }: any) => {
+const BookmarkCard = ({ repo }: { repo: string }) => {
 	const handleBookmarkDelete = useBookmarkDelete();
 
 	return (

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { format } from "timeago.js";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { bookmarkArrayState, bookmarkState } from "src/atom/bookmarkState";
+import { SearchResult } from "src/interfaces/search";
 
 // hooks
 import useViewport from "src/hooks/useViewport";
@@ -16,7 +17,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { Chip, IconButton } from "@mui/material";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
-const SearchCard = ({ repo }: any) => {
+const SearchCard = ({ repo }: { repo: SearchResult }) => {
 	const { isMobile } = useViewport();
 
 	const handleBookmarkDelete = useBookmarkDelete();
@@ -27,7 +28,9 @@ const SearchCard = ({ repo }: any) => {
 	const [starCount, setStarCount] = useState("0");
 
 	useEffect(() => {
-		setBookmarkedByString(getLocalStorage("bookmarkedRepos"));
+		const getBookmarkedRepos = getLocalStorage("bookmarkedRepos");
+		typeof getBookmarkedRepos === "string" &&
+			setBookmarkedByString(getBookmarkedRepos);
 
 		/**
 		 * star 갯수 포맷  ex) 12345 -> 12K
@@ -72,7 +75,7 @@ const SearchCard = ({ repo }: any) => {
 				<Text>Updated {format(repo.updated_at)}</Text>
 			</FlexBox>
 			<ChipBox>
-				{repo.topics.map((topic) => {
+				{repo.topics?.map((topic: string) => {
 					return <Chip label={topic} size="small" key={`chip-${topic}`} />;
 				})}
 			</ChipBox>

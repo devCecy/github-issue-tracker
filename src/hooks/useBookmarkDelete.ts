@@ -11,8 +11,10 @@ const useBookmarkDelete = () => {
 	const [snackbar, setSnackbar] = useRecoilState(snackbarState);
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
 
-	const handleBookmarkDelete = (targetRepo) => {
-		const newBookmarkList = bookmarkedArray.filter((el) => el !== targetRepo);
+	const handleBookmarkDelete = (targetRepo: string) => {
+		const newBookmarkList = bookmarkedArray.filter(
+			(el: string) => el !== targetRepo
+		);
 
 		setLocalStorage("bookmarkedRepos", JSON.stringify(newBookmarkList));
 		setBookmarkedByString(JSON.stringify(newBookmarkList));

@@ -12,7 +12,9 @@ const Bookmark = () => {
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
 
 	useEffect(() => {
-		setBookmarkedByString(getLocalStorage("bookmarkedRepos"));
+		const getBookmarkedRepos = getLocalStorage("bookmarkedRepos");
+		typeof getBookmarkedRepos === "string" &&
+			setBookmarkedByString(getBookmarkedRepos);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -24,14 +26,8 @@ const Bookmark = () => {
 					{bookmarkedArray === null || bookmarkedArray?.length === 0 ? (
 						<EmptyBox>북마크한 레포지토리가 없어요!</EmptyBox>
 					) : (
-						bookmarkedArray?.map((repo) => {
-							return (
-								<BookmarkCard
-									bookmarkedArray={bookmarkedArray}
-									repo={repo}
-									key={repo}
-								/>
-							);
+						bookmarkedArray?.map((repo: string) => {
+							return <BookmarkCard repo={repo} key={repo} />;
 						})
 					)}
 				</BookmarkBox>

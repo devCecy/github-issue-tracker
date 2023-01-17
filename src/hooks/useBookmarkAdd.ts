@@ -13,7 +13,7 @@ const useBookmarkAdd = () => {
 	const [snackbar, setSnackbar] = useRecoilState(snackbarState);
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
 
-	const handleBookmarkAdd = (targetRepo) => {
+	const handleBookmarkAdd = (targetRepo: string) => {
 		if (bookmarkedArray?.length > 3) return setIsAlert(true);
 
 		let newBookmarkList;

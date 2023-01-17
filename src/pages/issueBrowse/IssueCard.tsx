@@ -1,10 +1,11 @@
 import { format } from "timeago.js";
+import { Issue } from "src/interfaces/issues";
 
 // mui
 import styled from "styled-components";
 import { Avatar } from "@mui/material";
 
-const IssueCard = ({ issue }: any) => {
+const IssueCard = ({ issue }: { issue: Issue }) => {
 	const formattedDate = format(issue.created_at);
 
 	return (
