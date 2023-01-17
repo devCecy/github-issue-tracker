@@ -12,6 +12,8 @@ declare module "@mui/material/styles" {
 		};
 		typography: {
 			h1: { fontSize: string };
+			h2: { fontSize: string };
+			h3: { fontSize: string };
 			body1: {
 				fontSize: string;
 			};
