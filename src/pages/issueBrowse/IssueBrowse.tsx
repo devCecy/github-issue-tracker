@@ -14,12 +14,16 @@ import PaginationBar from "src/components/PaginationBar";
 import styled from "styled-components";
 import { Chip, Skeleton } from "@mui/material";
 
+// FIXME: a레포 페이지네이션 후 -> 이슈가 1페이가 전부인 b레포 클릭 -> 이슈없다고 나옴 (페이지가 1로 안되어있음, 정상호출 후 한번 더 호출됨)
 const IssueBrowse = () => {
 	const setBookmarkedByString = useSetRecoilState(bookmarkState);
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
 
 	useEffect(() => {
-		setBookmarkedByString(getLocalStorage("bookmarkedRepos"));
+		const getBookmarkedRepos = getLocalStorage("bookmarkedRepos");
+		typeof getBookmarkedRepos === "string" &&
+			setBookmarkedByString(getBookmarkedRepos);
+
 		if (bookmarkedArray === null || bookmarkedArray?.length === 0) {
 			setHasBookmarkedRepo(false);
 			setIssueList([]);
@@ -35,6 +39,7 @@ const IssueBrowse = () => {
 	const [currentRepo, setCurrentRepo] = useState(
 		bookmarkedArray ? bookmarkedArray[0] : ""
 	);
+	const [isNewRepoClicked, setIsNewRepoClicked] = useState(false);
 	const [totalPage, setTotalPage] = useState(1);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [isIssueCardLoaded, setIsIssueCardLoaded] = useState(
@@ -45,20 +50,11 @@ const IssueBrowse = () => {
 	 * 로컬스토리지에 저장된 레포지토리 여부에 따라 이슈 리스트 호출을 결정합니다.
 	 */
 	useEffect(() => {
-		if (currentRepo) {
-			setHasBookmarkedRepo(true);
-			getIssues(currentRepo);
-		} else {
-			setHasBookmarkedRepo(false);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentRepo]);
+		if (!currentRepo) return setHasBookmarkedRepo(false);
 
-	/**
-	 * 페이지 혹은 선택된 레포지토리 정보가 업데이트 되면 다음 페이지 issue리스트를 호출합니다.
-	 */
-	useEffect(() => {
+		setHasBookmarkedRepo(true);
 		getIssues(currentRepo);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentRepo, currentPage]);
 
@@ -90,6 +86,9 @@ const IssueBrowse = () => {
 			.catch((err) => {
 				console.error(err);
 				setIsIssueCardLoaded(false);
+			})
+			.finally(() => {
+				setIsNewRepoClicked(false);
 			});
 	};
 
@@ -99,6 +98,7 @@ const IssueBrowse = () => {
 	 */
 	const handleRepoSorting = (e: React.MouseEvent<HTMLDivElement>) => {
 		setCurrentRepo(e.currentTarget.innerText);
+		setIsNewRepoClicked(true);
 	};
 
 	/**
@@ -119,10 +119,10 @@ const IssueBrowse = () => {
 							<Chip
 								key={repo}
 								label={repo}
-								color="primary" // TODO: theme 컿러 가져오기!!!
+								color="primary"
 								style={{ fontSize: "1.4rem" }}
 								variant={currentRepo === repo ? "filled" : "outlined"}
-								onClick={(e) => handleRepoSorting(e)}
+								onClick={handleRepoSorting}
 							/>
 						);
 					})}
@@ -159,6 +159,7 @@ const IssueBrowse = () => {
 					<PaginationBar
 						totalPage={totalPage}
 						handlePageChange={handlePageChange}
+						isChanged={isNewRepoClicked}
 					/>
 				)}
 			</Inner>
@@ -196,6 +197,19 @@ const RepoButtonBox = styled.div`
 	column-gap: 0.5rem;
 	row-gap: 1rem;
 	margin-bottom: 2rem;
+
+	.MuiChip-filledPrimary {
+		background-color: ${({ theme }) => theme.palette.primary.main};
+		&:hover {
+			background-color: ${({ theme }) => theme.palette.primary.main};
+		}
+	}
+	.MuiChip-outlinedPrimary {
+		color: ${({ theme }) => theme.palette.primary.main};
+		&:hover {
+			color: ${({ theme }) => theme.palette.primary.main};
+		}
+	}
 `;
 
 const IssueBox = styled.div`
