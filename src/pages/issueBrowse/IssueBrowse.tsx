@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Issue } from "src/interfaces/issues";
-import { BASE_URL } from "src/utils/environment";
+import { BASE_URL, TOKEN } from "src/utils/environment";
 import { getLocalStorage } from "src/utils/util";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { bookmarkArrayState, bookmarkState } from "src/atom/bookmarkState";
@@ -88,7 +88,12 @@ const IssueBrowse = () => {
 
 		axios
 			.get(
-				`${BASE_URL}/repos/${url}/issues?per_page=${PER_PAGE}&page=${page}&sort=${currentSorting}&directions=${currentDirection}&state=all`
+				`${BASE_URL}/repos/${url}/issues?per_page=${PER_PAGE}&page=${page}&sort=${currentSorting}&directions=${currentDirection}&state=all`,
+				{
+					headers: {
+						Authorization: TOKEN,
+					},
+				}
 			)
 			.then((res) => {
 				const linkHeader = res.headers.link;
