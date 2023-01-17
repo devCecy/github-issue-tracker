@@ -5,35 +5,39 @@ import { Issue } from "src/interfaces/issues";
 import styled from "styled-components";
 import { Avatar } from "@mui/material";
 
-const IssueCard = ({ issue }: { issue: Issue }) => {
+interface IssueCardProps {
+	issue: Issue;
+	currentRepo: string;
+}
+
+const IssueCard = ({ issue, currentRepo }: IssueCardProps) => {
 	const formattedDate = format(issue.created_at);
 
 	return (
-		<CardContainer>
-			<a href={issue.html_url} target="_blank" rel="noreferrer">
-				<CardTopBox>
-					<UserBox>
-						<Avatar
-							alt={issue.user.login}
-							src={issue.user.avatar_url}
-							sx={{ width: 24, height: 24 }}
-						/>
-						<UserId>{issue.user.login}</UserId>
-						<CreatedAt>· {formattedDate}</CreatedAt>
-					</UserBox>
-					<StateBox>
-						<IssueState state={issue.state}>{issue.state}</IssueState>
-					</StateBox>
-				</CardTopBox>
-				<Title>{issue.title}</Title>
-			</a>
-		</CardContainer>
+		<Container href={issue.html_url} target="_blank" rel="noreferrer">
+			<CardTopBox>
+				<UserBox>
+					<Avatar
+						alt={issue.user.login}
+						src={issue.user.avatar_url}
+						sx={{ width: 24, height: 24 }}
+					/>
+					<UserId>{issue.user.login}</UserId>
+					<UserId>({currentRepo})</UserId>
+					<CreatedAt>· {formattedDate}</CreatedAt>
+				</UserBox>
+				<StateBox>
+					<IssueState state={issue.state}>{issue.state}</IssueState>
+				</StateBox>
+			</CardTopBox>
+			<Title>{issue.title}</Title>
+		</Container>
 	);
 };
 
 export default IssueCard;
 
-const CardContainer = styled.div`
+const Container = styled.a`
 	position: relative;
 	width: 85%;
 	background-color: white;
