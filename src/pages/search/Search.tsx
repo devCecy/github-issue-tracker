@@ -15,20 +15,26 @@ const Search = () => {
 	const [searchValue, setSearchValue] = useState("");
 	const [totalResultCount, setTotalResultCount] = useState(0);
 	const [currentPage, setCurrentPage] = useState(1);
+	const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
+	/**
+	 * input폼이 제출되거나(엔터/아이콘클릭), 페이지가 업데이트 되면 getRepos api를 호출한다.
+	 */
 	useEffect(() => {
 		if (!searchValue) {
 			setCurrentPage(1);
 			setSearchResult([]);
 			setTotalResultCount(0);
+			setIsFormSubmitted(false);
 		} else {
 			getRepos(searchValue);
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [searchValue, currentPage]);
+	}, [isFormSubmitted, currentPage]);
+
 	/**
-	 *
+	 * 인풋에 작성되는 검색어를 저장합니다.
 	 * @param e
 	 */
 	const handleSearch = (e) => {
@@ -36,17 +42,33 @@ const Search = () => {
 	};
 
 	/**
-	 * Issue List 데이터를 가져옵니다.
-	 * @param name
+	 * 인풋폼을 제출합니다.
+	 * @param e
 	 */
-	const getRepos = (org: string) => {
+	const handleSearchSubmit = (e) => {
+		e.preventDefault();
+		setIsFormSubmitted(true);
+		setCurrentPage(1);
+	};
+
+	/**
+	 * 레포지토리 검색결과를 페이지네이션합니다.
+	 * @param currentPage
+	 */
+	const handlePageChange = (currentPage: number) => {
+		setCurrentPage(currentPage);
+	};
+
+	/**
+	 * 레포지토리를 검색합니다.
+	 * @param repo
+	 */
+	const getRepos = (repo: string) => {
 		const PER_PAGE = 10;
-		// const currentSorting = "created"; // created | updated |comments
 		const currentOrder = "desc"; // desc | asc
-		//
 		axios
 			.get(
-				`${BASE_URL}/search/repositories?q=${org}&per_page=${PER_PAGE}&page=${currentPage}&order=${currentOrder}`,
+				`${BASE_URL}/search/repositories?q=${repo}&per_page=${PER_PAGE}&page=${currentPage}&order=${currentOrder}`,
 				{
 					headers: {
 						Authorization: TOKEN,
@@ -56,19 +78,13 @@ const Search = () => {
 			.then((res) => {
 				setSearchResult(res.data.items);
 				setTotalResultCount(res.data.total_count);
-				console.log("res", res.data);
 			})
 			.catch((err) => {
 				console.error(err);
+			})
+			.finally(() => {
+				setIsFormSubmitted(false);
 			});
-	};
-
-	/**
-	 * 레포지토 검색결과 페이지네이션
-	 * @param currentPage
-	 */
-	const handlePageChange = (currentPage: number) => {
-		setCurrentPage(currentPage);
 	};
 
 	return (
@@ -76,14 +92,19 @@ const Search = () => {
 			<Inner>
 				<Title>레포지토리 검색</Title>
 
-				<Form>
+				{/* 검색창 */}
+				<Form onSubmit={handleSearchSubmit}>
 					<FormControl fullWidth>
 						<OutlinedInput
-							value={searchValue}
 							onChange={handleSearch}
 							endAdornment={
 								<InputAdornment position="start">
-									<SearchIcon fontSize="large" />
+									<SearchIcon
+										fontSize="large"
+										type="submit"
+										id={searchValue}
+										onClick={handleSearchSubmit}
+									/>
 								</InputAdornment>
 							}
 							style={{
@@ -94,24 +115,30 @@ const Search = () => {
 						/>
 					</FormControl>
 				</Form>
-				{searchValue && (
+
+				{/* TODO: 조건 재설정  */}
+				{searchValue && searchResult && (
 					<Text>
-						총 <strong>{totalResultCount}</strong>개의 레포지토리가
-						검색되었어요!
+						총 <strong>{totalResultCount.toLocaleString()}</strong>개의
+						레포지토리가 검색되었어요!
 					</Text>
 				)}
 
+				{/* 검색결과 */}
 				<SearchCardBox>
-					{searchResult?.length === 0 && (
+					{!searchValue && searchResult?.length === 0 && (
 						<EmptyBox>레포지토리를 검색하고, 북마크 해보세요!</EmptyBox>
 					)}
 					{searchResult?.map((repo) => {
 						return <SearchCard repo={repo} key={repo.full_name} />;
 					})}
 				</SearchCardBox>
+
+				{/* 페이지네이션 */}
 				<PaginationBar
 					totalPage={Math.ceil(totalResultCount / 10)}
 					handlePageChange={handlePageChange}
+					isChanged={isFormSubmitted}
 				/>
 			</Inner>
 		</Container>
@@ -145,10 +172,10 @@ const EmptyBox = styled.div`
 	font-size: ${({ theme }) => theme.typography.body1.fontSize};
 `;
 
-const Form = styled.div`
+const Form = styled.form`
 	box-shadow: 0.5rem 0.5rem 0.5rem lightgray;
 	border-radius: 1.5rem;
-	margin-bottom: 2rem;
+	margin: 2rem;
 `;
 
 const SearchCardBox = styled.div`
@@ -160,6 +187,6 @@ const SearchCardBox = styled.div`
 
 const Text = styled.p`
 	font-size: ${({ theme }) => theme.typography.body1.fontSize};
-	padding: 0 1rem;
+	padding: 0 3rem;
 	margin-bottom: 2rem;
 `;
