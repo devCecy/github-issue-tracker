@@ -14,7 +14,6 @@ import PaginationBar from "src/components/PaginationBar";
 import styled from "styled-components";
 import { Chip, Skeleton } from "@mui/material";
 
-// FIXME: a레포 페이지네이션 후 -> 이슈가 1페이가 전부인 b레포 클릭 -> 이슈없다고 나옴 (페이지가 1로 안되어있음, 정상호출 후 한번 더 호출됨)
 const IssueBrowse = () => {
 	const setBookmarkedByString = useSetRecoilState(bookmarkState);
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
@@ -51,20 +50,27 @@ const IssueBrowse = () => {
 	 */
 	useEffect(() => {
 		if (!currentRepo) return setHasBookmarkedRepo(false);
-
 		setHasBookmarkedRepo(true);
-		getIssues(currentRepo);
+		getIssues(currentRepo, 1);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentRepo, currentPage]);
+	}, [currentRepo]);
+
+	/**
+	 * currentPage가 업데이트되면 이슈 리스를 호출합니다.
+	 */
+	useEffect(() => {
+		getIssues(currentRepo, currentPage);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentPage]);
 
 	/**
 	 * Issue List 데이터를 가져옵니다.
 	 * @param name
 	 */
-	const getIssues = (url: string) => {
+	const getIssues = (url: string, page: number) => {
 		const PER_PAGE = 10;
-		const currentSorting = "created"; // created | updated |comments
+		const currentSorting = "updated"; // created | updated |comments
 		const currentDirection = "desc"; // desc | asc
 
 		const lastPattern = /(?<=<)([\S]*)(?=>; rel="Last")/i;
@@ -72,7 +78,7 @@ const IssueBrowse = () => {
 
 		axios
 			.get(
-				`${BASE_URL}/repos/${url}/issues?per_page=${PER_PAGE}&page=${currentPage}&sort=${currentSorting}&directions=${currentDirection}&state=all`
+				`${BASE_URL}/repos/${url}/issues?per_page=${PER_PAGE}&page=${page}&sort=${currentSorting}&directions=${currentDirection}&state=all`
 			)
 			.then((res) => {
 				const linkHeader = res.headers.link;
@@ -150,11 +156,17 @@ const IssueBrowse = () => {
 						) : (
 							issueList.map((issue, idx) => {
 								return (
-									<IssueCard issue={issue} key={`${idx}-${issue.user.login}`} />
+									<IssueCard
+										issue={issue}
+										currentRepo={currentRepo}
+										key={`${idx}-${issue.user.login}`}
+									/>
 								);
 							})
 						))}
 				</IssueBox>
+
+				{/* 페이지네이션 */}
 				{hasBookmarkedRepo && issueList && (
 					<PaginationBar
 						totalPage={totalPage}
