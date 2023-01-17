@@ -15,7 +15,6 @@ const Header = () => {
 				<HomeBtn onClick={() => navigate("/")}>ISSUE TRACKER</HomeBtn>
 				<ButtonBox>
 					<IconButton onClick={() => navigate("/bookmark")}>
-						{/* TODO: color	변경 */}
 						<BookmarkIcon fontSize="large" />
 					</IconButton>
 					<IconButton onClick={() => navigate("/search")}>
