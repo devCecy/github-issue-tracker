@@ -5,6 +5,7 @@ import { RecoilRoot } from "recoil";
 // components
 import App from "./App";
 import Alert from "./components/Alert";
+import SnackbarAlert from "./components/SnacknarAlert";
 
 // style
 import { ThemeProvider } from "styled-components";
@@ -20,6 +21,7 @@ root.render(
 			<RecoilRoot>
 				<App />
 				<Alert />
+				<SnackbarAlert />
 				<GlobalStyle />
 			</RecoilRoot>
 		</ThemeProvider>
