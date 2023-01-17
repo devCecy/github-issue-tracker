@@ -1,9 +1,12 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import App from "./App";
-
 import { RecoilRoot } from "recoil";
 
+// components
+import App from "./App";
+import Alert from "./components/Alert";
+
+// style
 import { ThemeProvider } from "styled-components";
 import { theme } from "./style/theme";
 import GlobalStyle from "./style/global";
@@ -16,6 +19,7 @@ root.render(
 		<ThemeProvider theme={theme}>
 			<RecoilRoot>
 				<App />
+				<Alert />
 				<GlobalStyle />
 			</RecoilRoot>
 		</ThemeProvider>
