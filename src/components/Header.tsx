@@ -2,8 +2,9 @@ import { useNavigate } from "react-router-dom";
 
 // style
 import styled from "styled-components";
-import { Button } from "@mui/material";
+import { IconButton } from "@mui/material";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -12,16 +13,15 @@ const Header = () => {
 		<Container>
 			<Inner>
 				<HomeBtn onClick={() => navigate("/")}>ISSUE TRACKER</HomeBtn>
-				<div>
-					<Button>
-						<BookmarkIcon
-							fontSize="large"
-							color="inherit"
-							onClick={() => navigate("/bookmark")}
-						/>
-					</Button>
-					<Button variant="text">Search</Button>
-				</div>
+				<ButtonBox>
+					<IconButton onClick={() => navigate("/bookmark")}>
+						{/* TODO: color	변경 */}
+						<BookmarkIcon fontSize="large" />
+					</IconButton>
+					<IconButton onClick={() => navigate("/search")}>
+						<SearchIcon fontSize="large" />
+					</IconButton>
+				</ButtonBox>
 			</Inner>
 		</Container>
 	);
@@ -49,4 +49,9 @@ const HomeBtn = styled.button`
 	color: white;
 	font-size: ${({ theme }) => theme.typography.body1.fontSize};
 	font-weight: 500;
+`;
+
+const ButtonBox = styled.div`
+	display: flex;
+	column-gap: 0.5rem;
 `;
