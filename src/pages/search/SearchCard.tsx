@@ -1,9 +1,8 @@
 import { getLocalStorage } from "src/utils/util";
 import { useEffect, useState } from "react";
 import { format } from "timeago.js";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { bookmarkArrayState, bookmarkState } from "src/atom/bookmarkState";
-import { snackbarState } from "src/atom/snackBarState";
 
 // hooks
 import useViewport from "src/hooks/useViewport";
@@ -14,7 +13,7 @@ import useBookmarkAdd from "src/hooks/useBookmarkAdd";
 import styled from "styled-components";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import { Alert, Chip, IconButton, Snackbar } from "@mui/material";
+import { Chip, IconButton } from "@mui/material";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 
 const SearchCard = ({ repo }: any) => {
@@ -22,7 +21,6 @@ const SearchCard = ({ repo }: any) => {
 
 	const handleBookmarkDelete = useBookmarkDelete();
 	const handleBookMarkAdd = useBookmarkAdd();
-	const [snackbar, setSnackbar] = useRecoilState(snackbarState);
 
 	const setBookmarkedByString = useSetRecoilState(bookmarkState);
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
@@ -75,27 +73,9 @@ const SearchCard = ({ repo }: any) => {
 			</FlexBox>
 			<ChipBox>
 				{repo.topics.map((topic) => {
-					return <Chip label={topic} size="small" />;
+					return <Chip label={topic} size="small" key={`chip-${topic}`} />;
 				})}
 			</ChipBox>
-
-			{/* 북마크 스낵바 */}
-			<Snackbar
-				open={snackbar.isOpen}
-				autoHideDuration={1000}
-				onClose={() => setSnackbar({ ...snackbar, isOpen: false })}
-				style={{ width: "95%" }}
-			>
-				<Alert
-					onClose={() => setSnackbar({ ...snackbar, isOpen: false })}
-					severity="success"
-					style={{ width: "100%", fontSize: "1.4rem" }}
-				>
-					{snackbar.state === "add"
-						? "성공적으로 북마크 되었습니다!"
-						: "북마크가 해제되었습니다."}
-				</Alert>
-			</Snackbar>
 		</Container>
 	);
 };

@@ -5,5 +5,5 @@ import { atom } from "recoil";
  */
 export const snackbarState = atom({
 	key: "snackbarState",
-	default: { isOpen: true, state: "add" || "delete" },
+	default: { isOpen: false, state: "add" || "delete" },
 });
