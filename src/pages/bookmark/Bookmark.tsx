@@ -26,7 +26,11 @@ const Bookmark = () => {
 					) : (
 						bookmarkedArray?.map((repo) => {
 							return (
-								<BookmarkCard bookmarkedArray={bookmarkedArray} repo={repo} />
+								<BookmarkCard
+									bookmarkedArray={bookmarkedArray}
+									repo={repo}
+									key={repo}
+								/>
 							);
 						})
 					)}
