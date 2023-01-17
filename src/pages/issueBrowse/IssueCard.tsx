@@ -1,5 +1,6 @@
 import { format } from "timeago.js";
 import { Issue } from "src/interfaces/issues";
+import useViewport from "src/hooks/useViewport";
 
 // mui
 import styled from "styled-components";
@@ -12,6 +13,7 @@ interface IssueCardProps {
 
 const IssueCard = ({ issue, currentRepo }: IssueCardProps) => {
 	const formattedDate = format(issue.created_at);
+	const { isMobile } = useViewport();
 
 	return (
 		<Container href={issue.html_url} target="_blank" rel="noreferrer">
@@ -22,10 +24,21 @@ const IssueCard = ({ issue, currentRepo }: IssueCardProps) => {
 						src={issue.user.avatar_url}
 						sx={{ width: 24, height: 24 }}
 					/>
-					<UserId>{issue.user.login}</UserId>
-					<UserId>({currentRepo})</UserId>
+					{isMobile ? (
+						<div>
+							<UserId>{issue.user.login}</UserId>
+							<Title>({currentRepo})</Title>
+						</div>
+					) : (
+						<>
+							<UserId>{issue.user.login}</UserId>
+							<Title>({currentRepo})</Title>
+						</>
+					)}
+
 					<CreatedAt>· {formattedDate}</CreatedAt>
 				</UserBox>
+
 				<StateBox>
 					<IssueState state={issue.state}>{issue.state}</IssueState>
 				</StateBox>
