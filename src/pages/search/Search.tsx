@@ -19,7 +19,7 @@ const Search = () => {
 	const [totalResultCount, setTotalResultCount] = useState(0);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-
+	const [isSearchStarted, setIsSearchStarted] = useState(false);
 	/**
 	 * input폼이 제출되거나(엔터/아이콘클릭), 페이지가 업데이트 되면 getRepos api를 호출한다.
 	 */
@@ -53,6 +53,7 @@ const Search = () => {
 	) => {
 		e.preventDefault();
 		setIsFormSubmitted(true);
+		setIsSearchStarted(true);
 		setCurrentPage(1);
 	};
 
@@ -121,8 +122,7 @@ const Search = () => {
 					</FormControl>
 				</Form>
 
-				{/* TODO: 조건 재설정  */}
-				{searchValue && searchResult && (
+				{isSearchStarted && (
 					<Text>
 						총 <strong>{totalResultCount.toLocaleString()}</strong>개의
 						레포지토리가 검색되었어요!
@@ -131,7 +131,7 @@ const Search = () => {
 
 				{/* 검색결과 */}
 				<SearchCardBox>
-					{!searchValue && searchResult?.length === 0 && (
+					{!isSearchStarted && !searchValue && searchResult?.length === 0 && (
 						<EmptyBox>레포지토리를 검색하고, 북마크 해보세요!</EmptyBox>
 					)}
 					{searchResult?.map((repo) => {
