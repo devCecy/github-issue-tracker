@@ -18,6 +18,28 @@ const IssueBrowse = () => {
 	const setBookmarkedByString = useSetRecoilState(bookmarkState);
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
 
+	const [issueList, setIssueList] = useState<Issue[]>([]);
+	const [hasBookmarkedRepo, setHasBookmarkedRepo] = useState(false);
+	const [currentRepo, setCurrentRepo] = useState(
+		bookmarkedArray ? bookmarkedArray[0] : ""
+	);
+	const [isNewRepoClicked, setIsNewRepoClicked] = useState(false);
+	const [totalPage, setTotalPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [isIssueCardLoaded, setIsIssueCardLoaded] = useState(
+		issueList.length > 0 ? true : false
+	);
+
+	/**
+	 * 패이지네이션 시 스크롤 상단으로 이동
+	 */
+	useEffect(() => {
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth",
+		});
+	}, [currentPage]);
+
 	useEffect(() => {
 		const getBookmarkedRepos = getLocalStorage("bookmarkedRepos");
 		typeof getBookmarkedRepos === "string" &&
@@ -32,18 +54,6 @@ const IssueBrowse = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const [issueList, setIssueList] = useState<Issue[]>([]);
-	const [hasBookmarkedRepo, setHasBookmarkedRepo] = useState(false);
-	const [currentRepo, setCurrentRepo] = useState(
-		bookmarkedArray ? bookmarkedArray[0] : ""
-	);
-	const [isNewRepoClicked, setIsNewRepoClicked] = useState(false);
-	const [totalPage, setTotalPage] = useState(1);
-	const [currentPage, setCurrentPage] = useState(1);
-	const [isIssueCardLoaded, setIsIssueCardLoaded] = useState(
-		issueList.length > 0 ? true : false
-	);
 
 	/**
 	 * 로컬스토리지에 저장된 레포지토리 여부에 따라 이슈 리스트 호출을 결정합니다.
