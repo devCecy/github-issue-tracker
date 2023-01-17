@@ -19,17 +19,17 @@ const Bookmark = () => {
 	return (
 		<Container>
 			<Inner>
-				<Title>레포지토리</Title>
+				<Title>북마크 레포지토리</Title>
 				<BookmarkBox>
-					{bookmarkedArray?.length === 0 && (
+					{bookmarkedArray === null || bookmarkedArray?.length === 0 ? (
 						<EmptyBox>북마크한 레포지토리가 없어요!</EmptyBox>
+					) : (
+						bookmarkedArray?.map((repo) => {
+							return (
+								<BookmarkCard bookmarkedArray={bookmarkedArray} repo={repo} />
+							);
+						})
 					)}
-
-					{bookmarkedArray?.map((repo) => {
-						return (
-							<BookmarkCard bookmarkedArray={bookmarkedArray} repo={repo} />
-						);
-					})}
 				</BookmarkBox>
 			</Inner>
 		</Container>
