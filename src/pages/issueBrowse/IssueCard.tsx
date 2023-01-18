@@ -1,6 +1,7 @@
 import { format } from "timeago.js";
 import { Issue } from "src/interfaces/issues";
 import useViewport from "src/hooks/useViewport";
+import LazyLoad from "react-lazyload";
 
 // mui
 import styled from "styled-components";
@@ -19,11 +20,13 @@ const IssueCard = ({ issue, currentRepo }: IssueCardProps) => {
 		<Container href={issue.html_url} target="_blank" rel="noreferrer">
 			<CardTopBox>
 				<UserBox>
-					<Avatar
-						alt={issue.user.login}
-						src={issue.user.avatar_url}
-						sx={{ width: 24, height: 24 }}
-					/>
+					<LazyLoad>
+						<Avatar
+							alt={issue.user.login}
+							src={issue.user.avatar_url}
+							sx={{ width: 24, height: 24 }}
+						/>
+					</LazyLoad>
 					{isMobile ? (
 						<div>
 							<UserId>{issue.user.login}</UserId>
