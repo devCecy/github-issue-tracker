@@ -1,5 +1,5 @@
-import { alertState } from "./../atom/alertState";
-import { snackbarState } from "../atom/snackBarState";
+import { alertState } from "src/atom/alertState";
+import { snackbarState } from "src/atom/snackBarState";
 import { bookmarkArrayState, bookmarkState } from "src/atom/bookmarkState";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { setLocalStorage } from "src/utils/util";
