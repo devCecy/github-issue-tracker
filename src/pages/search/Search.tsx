@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_URL, TOKEN } from "src/utils/environment";
-import React, { useState } from "react";
+import React, { lazy, Suspense, useCallback, useState } from "react";
 import { useEffect } from "react";
 import { SearchResult } from "src/interfaces/search";
 
@@ -10,8 +10,9 @@ import { FormControl, InputAdornment, OutlinedInput } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 // components
-import SearchCard from "./SearchCard";
-import PaginationBar from "src/components/PaginationBar";
+import BoxSkeleton from "src/components/BoxSkeleton";
+const PaginationBar = lazy(() => import("src/components/PaginationBar"));
+const SearchCard = lazy(() => import("./SearchCard"));
 
 const Search = () => {
 	const [searchResult, setSearchResult] = useState<SearchResult[]>([]);
@@ -20,6 +21,17 @@ const Search = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 	const [isSearchStarted, setIsSearchStarted] = useState(false);
+
+	/**
+	 * 패이지네이션 시 스크롤 상단으로 이동
+	 */
+	useEffect(() => {
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth",
+		});
+	}, [currentPage]);
+
 	/**
 	 * input폼이 제출되거나(엔터/아이콘클릭), 페이지가 업데이트 되면 getRepos api를 호출한다.
 	 */
@@ -135,23 +147,29 @@ const Search = () => {
 						<EmptyBox>레포지토리를 검색하고, 북마크 해보세요!</EmptyBox>
 					)}
 					{searchResult?.map((repo) => {
-						return <SearchCard repo={repo} key={repo.full_name} />;
+						return (
+							<Suspense fallback={<BoxSkeleton />} key={repo.full_name}>
+								<SearchCard repo={repo} />
+							</Suspense>
+						);
 					})}
 				</SearchCardBox>
 
-				{/* 페이지네이션 */}
-				<PaginationBar
-					totalPage={Math.ceil(totalResultCount / 10)}
-					handlePageChange={handlePageChange}
-					isChanged={isFormSubmitted}
-				/>
+				<Suspense fallback={null}>
+					{/* 페이지네이션 */}
+					<PaginationBar
+						totalPage={Math.ceil(totalResultCount / 10)}
+						handlePageChange={handlePageChange}
+						isChanged={isFormSubmitted}
+					/>
+				</Suspense>
 			</Inner>
 		</Container>
 	);
 };
 export default Search;
 
-const Container = styled.div`
+const Container = styled.main`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
