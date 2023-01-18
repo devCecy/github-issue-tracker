@@ -10,7 +10,7 @@ const BookmarkCard = ({ repo }: { repo: string }) => {
 
 	return (
 		<CardContainer>
-			<Button>
+			<Button aria-label="bookmark">
 				<BookmarkIcon
 					id={repo}
 					fontSize="large"
