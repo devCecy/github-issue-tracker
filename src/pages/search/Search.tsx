@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_URL, TOKEN } from "src/utils/environment";
-import React, { lazy, Suspense, useCallback, useState } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import { useEffect } from "react";
 import { SearchResult } from "src/interfaces/search";
 
@@ -89,7 +89,7 @@ const Search = () => {
 				`${BASE_URL}/search/repositories?q=${repo}&per_page=${PER_PAGE}&page=${currentPage}&order=${currentOrder}`,
 				{
 					headers: {
-						Authorization: TOKEN,
+						Authorization: `token ${TOKEN}`,
 					},
 				}
 			)
@@ -114,6 +114,7 @@ const Search = () => {
 				<Form onSubmit={handleSearchSubmit}>
 					<FormControl fullWidth>
 						<OutlinedInput
+							placeholder="ex) react"
 							onChange={handleSearch}
 							endAdornment={
 								<InputAdornment position="start">
@@ -185,7 +186,7 @@ const Inner = styled.div`
 const Title = styled.h1`
 	text-align: start;
 	font-size: ${({ theme }) => theme.typography.h1.fontSize};
-	padding: 1rem;
+	padding: 1rem 2rem;
 `;
 
 const EmptyBox = styled.div`
