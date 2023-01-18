@@ -5,6 +5,7 @@ import { bookmarkArrayState } from "src/atom/bookmarkState";
 
 // components
 import BookmarkCard from "./BookmarkCard";
+import GoToSearchBtn from "src/components/GoToSearchBtn";
 
 const Bookmark = () => {
 	const [bookmarkList, setBookmarkList] = useState([]);
@@ -21,7 +22,10 @@ const Bookmark = () => {
 				<Title>나의 레포지토리</Title>
 				<BookmarkBox>
 					{bookmarkList === null || bookmarkList?.length === 0 ? (
-						<EmptyBox>북마크한 레포지토리가 없어요!</EmptyBox>
+						<EmptyBox>
+							북마크한 레포지토리가 없어요!
+							<GoToSearchBtn />
+						</EmptyBox>
 					) : (
 						bookmarkedArray?.map((repo: string) => {
 							return <BookmarkCard repo={repo} key={repo} />;
@@ -51,13 +55,13 @@ const Inner = styled.div`
 const Title = styled.h1`
 	text-align: start;
 	font-size: ${({ theme }) => theme.typography.h1.fontSize};
-	padding: 1rem;
+	padding: 1rem 2rem;
 `;
 
 const EmptyBox = styled.div`
 	width: 85%;
 	background-color: white;
-	padding: 5rem 2rem;
+	padding: 3rem 2rem;
 	box-shadow: 1rem 0.5rem 0.5rem lightgray;
 	border: 1px solid #f9f8f8;
 	border-radius: 1.5rem;

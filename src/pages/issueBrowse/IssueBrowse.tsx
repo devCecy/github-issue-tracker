@@ -12,6 +12,7 @@ import { Chip } from "@mui/material";
 // components
 import IssueCard from "./IssueCard";
 import BoxSkeleton from "src/components/BoxSkeleton";
+import GoToSearchBtn from "src/components/GoToSearchBtn";
 const PaginationBar = lazy(() => import("src/components/PaginationBar"));
 
 const IssueBrowse = () => {
@@ -86,7 +87,7 @@ const IssueBrowse = () => {
 				`${BASE_URL}/repos/${url}/issues?per_page=${PER_PAGE}&page=${page}&sort=${currentSorting}&directions=${currentDirection}&state=all`,
 				{
 					headers: {
-						Authorization: TOKEN,
+						Authorization: `token ${TOKEN}`,
 					},
 				}
 			)
@@ -129,24 +130,29 @@ const IssueBrowse = () => {
 		<Container>
 			<Inner>
 				<Title>이슈 모아보기</Title>
-				<RepoButtonBox>
-					{bookmarkedArray?.map((repo: string) => {
-						return (
-							<Chip
-								key={repo}
-								label={repo}
-								color="primary"
-								style={{ fontSize: "1.4rem" }}
-								variant={currentRepo === repo ? "filled" : "outlined"}
-								onClick={handleRepoSorting}
-							/>
-						);
-					})}
-				</RepoButtonBox>
+				{bookmarkedArray?.length !== 0 && (
+					<RepoButtonBox>
+						{bookmarkedArray?.map((repo: string) => {
+							return (
+								<Chip
+									key={repo}
+									label={repo}
+									color="primary"
+									style={{ fontSize: "1.4rem" }}
+									variant={currentRepo === repo ? "filled" : "outlined"}
+									onClick={handleRepoSorting}
+								/>
+							);
+						})}
+					</RepoButtonBox>
+				)}
 
 				<IssueBox>
 					{!hasBookmarkedRepo && (
-						<EmptyBox>북마크된 레포지토리가 없어요!</EmptyBox>
+						<EmptyBox>
+							레포지토리를 검색하고 이슈를 모아보세요!
+							<GoToSearchBtn />
+						</EmptyBox>
 					)}
 					{hasBookmarkedRepo &&
 						(isIssueCardLoaded && issueList.length === 0 ? (
@@ -201,7 +207,7 @@ const Inner = styled.div`
 const Title = styled.h1`
 	text-align: start;
 	font-size: ${({ theme }) => theme.typography.h1.fontSize};
-	padding: 1rem;
+	padding: 1rem 2rem;
 `;
 
 const RepoButtonBox = styled.div`
@@ -238,7 +244,7 @@ const IssueBox = styled.div`
 const EmptyBox = styled.div`
 	width: 85%;
 	background-color: white;
-	padding: 5rem 2rem;
+	padding: 3rem 2rem;
 	box-shadow: 1rem 0.5rem 0.5rem lightgray;
 	border: 1px solid #f9f8f8;
 	border-radius: 1.5rem;
