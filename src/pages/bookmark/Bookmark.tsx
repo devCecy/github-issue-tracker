@@ -1,29 +1,26 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { bookmarkArrayState, bookmarkState } from "src/atom/bookmarkState";
-import { getLocalStorage } from "src/utils/util";
+import { useRecoilValue } from "recoil";
+import { bookmarkArrayState } from "src/atom/bookmarkState";
 
 // components
 import BookmarkCard from "./BookmarkCard";
 
 const Bookmark = () => {
-	const setBookmarkedByString = useSetRecoilState(bookmarkState);
+	const [bookmarkList, setBookmarkList] = useState([]);
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
 
 	useEffect(() => {
-		const getBookmarkedRepos = getLocalStorage("bookmarkedRepos");
-		typeof getBookmarkedRepos === "string" &&
-			setBookmarkedByString(getBookmarkedRepos);
+		setBookmarkList(bookmarkedArray);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [bookmarkedArray]);
 
 	return (
 		<Container>
 			<Inner>
-				<Title>북마크 레포지토리</Title>
+				<Title>나의 레포지토리</Title>
 				<BookmarkBox>
-					{bookmarkedArray === null || bookmarkedArray?.length === 0 ? (
+					{bookmarkList === null || bookmarkList?.length === 0 ? (
 						<EmptyBox>북마크한 레포지토리가 없어요!</EmptyBox>
 					) : (
 						bookmarkedArray?.map((repo: string) => {
@@ -38,7 +35,7 @@ const Bookmark = () => {
 
 export default Bookmark;
 
-const Container = styled.div`
+const Container = styled.main`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;

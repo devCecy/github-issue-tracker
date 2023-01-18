@@ -1,8 +1,7 @@
-import { getLocalStorage } from "src/utils/util";
 import { useEffect, useState } from "react";
 import { format } from "timeago.js";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { bookmarkArrayState, bookmarkState } from "src/atom/bookmarkState";
+import { useRecoilValue } from "recoil";
+import { bookmarkArrayState } from "src/atom/bookmarkState";
 import { SearchResult } from "src/interfaces/search";
 
 // hooks
@@ -23,14 +22,12 @@ const SearchCard = ({ repo }: { repo: SearchResult }) => {
 	const handleBookmarkDelete = useBookmarkDelete();
 	const handleBookMarkAdd = useBookmarkAdd();
 
-	const setBookmarkedByString = useSetRecoilState(bookmarkState);
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
+	const [bookmarkList, setBookmarkList] = useState([]);
 	const [starCount, setStarCount] = useState("0");
 
 	useEffect(() => {
-		const getBookmarkedRepos = getLocalStorage("bookmarkedRepos");
-		typeof getBookmarkedRepos === "string" &&
-			setBookmarkedByString(getBookmarkedRepos);
+		setBookmarkList(bookmarkedArray);
 
 		/**
 		 * star 갯수 포맷  ex) 12345 -> 12K
@@ -39,13 +36,13 @@ const SearchCard = ({ repo }: { repo: SearchResult }) => {
 		const formattedNumber = formatter.format(repo?.stargazers_count);
 		setStarCount(formattedNumber);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [bookmarkedArray]);
 
 	return (
 		<Container props={isMobile}>
 			<FlexBox props="title">
-				<IconButton>
-					{bookmarkedArray?.includes(repo.full_name) ? (
+				<IconButton aria-label="bookmark">
+					{bookmarkList?.includes(repo.full_name) ? (
 						<BookmarkIcon
 							id={repo.full_name}
 							fontSize="large"
@@ -82,7 +79,6 @@ const SearchCard = ({ repo }: { repo: SearchResult }) => {
 		</Container>
 	);
 };
-
 export default SearchCard;
 
 const Container = styled.div<{ props: boolean }>`
