@@ -23,6 +23,10 @@ const GlobalStyle = createGlobalStyle`
 	cursor: pointer;
   background-color: transparent;
   }
+
+  main {
+    margin-top: 8rem;
+  }
 `;
 
 export default GlobalStyle;
