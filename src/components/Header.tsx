@@ -48,7 +48,7 @@ const Container = styled.header`
 
 const Inner = styled.div`
 	width: 100%;
-	max-width: 70rem;
+	max-width: 80rem;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
