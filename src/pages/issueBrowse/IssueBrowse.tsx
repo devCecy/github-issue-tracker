@@ -1,33 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import axios from "axios";
 import { Issue } from "src/interfaces/issues";
 import { BASE_URL, TOKEN } from "src/utils/environment";
-import { getLocalStorage } from "src/utils/util";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { bookmarkArrayState, bookmarkState } from "src/atom/bookmarkState";
-
-// components
-import IssueCard from "./IssueCard";
-import PaginationBar from "src/components/PaginationBar";
+import { useRecoilValue } from "recoil";
+import { bookmarkArrayState } from "src/atom/bookmarkState";
 
 // style
 import styled from "styled-components";
-import { Chip, Skeleton } from "@mui/material";
+import { Chip } from "@mui/material";
+
+// components
+import IssueCard from "./IssueCard";
+import BoxSkeleton from "src/components/BoxSkeleton";
+const PaginationBar = lazy(() => import("src/components/PaginationBar"));
 
 const IssueBrowse = () => {
-	const setBookmarkedByString = useSetRecoilState(bookmarkState);
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
-
 	const [issueList, setIssueList] = useState<Issue[]>([]);
 	const [hasBookmarkedRepo, setHasBookmarkedRepo] = useState(false);
-	const [currentRepo, setCurrentRepo] = useState(
-		bookmarkedArray ? bookmarkedArray[0] : ""
-	);
+	const [currentRepo, setCurrentRepo] = useState("");
 	const [isNewRepoClicked, setIsNewRepoClicked] = useState(false);
 	const [totalPage, setTotalPage] = useState(1);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [isIssueCardLoaded, setIsIssueCardLoaded] = useState(
-		issueList.length > 0 ? true : false
+		issueList?.length > 0 ? true : false
 	);
 
 	/**
@@ -41,19 +37,18 @@ const IssueBrowse = () => {
 	}, [currentPage]);
 
 	useEffect(() => {
-		const getBookmarkedRepos = getLocalStorage("bookmarkedRepos");
-		typeof getBookmarkedRepos === "string" &&
-			setBookmarkedByString(getBookmarkedRepos);
-
 		if (bookmarkedArray === null || bookmarkedArray?.length === 0) {
 			setHasBookmarkedRepo(false);
 			setIssueList([]);
 			setTotalPage(0);
 			setCurrentPage(1);
 			setIsIssueCardLoaded(false);
+		} else {
+			setCurrentRepo(bookmarkedArray[0]);
+			setHasBookmarkedRepo(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [bookmarkedArray]);
 
 	/**
 	 * 로컬스토리지에 저장된 레포지토리 여부에 따라 이슈 리스트 호출을 결정합니다.
@@ -153,20 +148,12 @@ const IssueBrowse = () => {
 					{!hasBookmarkedRepo && (
 						<EmptyBox>북마크된 레포지토리가 없어요!</EmptyBox>
 					)}
-
 					{hasBookmarkedRepo &&
 						(isIssueCardLoaded && issueList.length === 0 ? (
 							<EmptyBox>생성된 이슈가 없어요!</EmptyBox>
 						) : !isIssueCardLoaded && issueList.length === 0 ? (
 							[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => {
-								return (
-									<SkeletonBox key={`skeleton-${item}`}>
-										<Skeleton
-											variant="rounded"
-											style={{ width: "100%", height: "10rem" }}
-										/>
-									</SkeletonBox>
-								);
+								return <BoxSkeleton key={`skeleton-${item}`} />;
 							})
 						) : (
 							issueList.map((issue, idx) => {
@@ -182,13 +169,15 @@ const IssueBrowse = () => {
 				</IssueBox>
 
 				{/* 페이지네이션 */}
-				{hasBookmarkedRepo && issueList && (
-					<PaginationBar
-						totalPage={totalPage}
-						handlePageChange={handlePageChange}
-						isChanged={isNewRepoClicked}
-					/>
-				)}
+				<Suspense fallback={null}>
+					{hasBookmarkedRepo && issueList && (
+						<PaginationBar
+							totalPage={totalPage}
+							handlePageChange={handlePageChange}
+							isChanged={isNewRepoClicked}
+						/>
+					)}
+				</Suspense>
 			</Inner>
 		</Container>
 	);
@@ -196,7 +185,7 @@ const IssueBrowse = () => {
 
 export default IssueBrowse;
 
-const Container = styled.div`
+const Container = styled.main`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -244,10 +233,6 @@ const IssueBox = styled.div`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-`;
-
-const SkeletonBox = styled.div`
-	margin-bottom: 2rem;
 `;
 
 const EmptyBox = styled.div`
