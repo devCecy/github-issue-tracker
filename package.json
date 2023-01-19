@@ -30,7 +30,7 @@
 	},
 	"scripts": {
 		"start": "react-scripts start",
-		"build": "env-cmd -f .env.production react-scripts build",
+		"build": "react-scripts build",
 		"serve": "npm run build && serve -s build",
 		"test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!my-library-dir)/'",
 		"eject": "react-scripts eject"
