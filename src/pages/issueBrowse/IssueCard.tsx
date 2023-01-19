@@ -30,7 +30,9 @@ const IssueCard = ({ issue, currentRepo }: IssueCardProps) => {
 					{isMobile ? (
 						<div>
 							<UserId>{issue.user.login}</UserId>
-							<Title>({currentRepo})</Title>
+							<Title style={{ maxWidth: "13rem", textOverflow: "ellipsis" }}>
+								({currentRepo})
+							</Title>
 						</div>
 					) : (
 						<>
@@ -80,6 +82,9 @@ const UserBox = styled.div`
 
 const Title = styled.p`
 	font-size: ${({ theme }) => theme.typography.body1.fontSize};
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 `;
 
 const UserId = styled.span`
