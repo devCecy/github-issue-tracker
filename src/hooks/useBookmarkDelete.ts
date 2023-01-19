@@ -12,7 +12,7 @@ const useBookmarkDelete = () => {
 	const bookmarkedArray = useRecoilValue(bookmarkArrayState);
 
 	const handleBookmarkDelete = (targetRepo: string) => {
-		const newBookmarkList = bookmarkedArray.filter(
+		const newBookmarkList = bookmarkedArray?.filter(
 			(el: string) => el !== targetRepo
 		);
 
