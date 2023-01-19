@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // style
 import styled from "styled-components";
@@ -7,24 +7,23 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import SearchIcon from "@mui/icons-material/Search";
 
 const Header = () => {
-	const navigate = useNavigate();
-
 	return (
 		<Container>
 			<Inner>
-				<HomeBtn onClick={() => navigate("/")} aria-label="home">
-					ISSUE TRACKER
-				</HomeBtn>
+				<Link to="/">
+					<HomeBtn aria-label="home">ISSUE TRACKER</HomeBtn>
+				</Link>
 				<ButtonBox>
-					<IconButton
-						onClick={() => navigate("/bookmark")}
-						aria-label="bookmark"
-					>
-						<BookmarkIcon fontSize="large" />
-					</IconButton>
-					<IconButton onClick={() => navigate("/search")} aria-label="search">
-						<SearchIcon fontSize="large" />
-					</IconButton>
+					<Link to="/bookmark">
+						<IconButton aria-label="bookmark">
+							<BookmarkIcon fontSize="large" />
+						</IconButton>
+					</Link>
+					<Link to="/search">
+						<IconButton aria-label="search">
+							<SearchIcon fontSize="large" />
+						</IconButton>
+					</Link>
 				</ButtonBox>
 			</Inner>
 		</Container>
