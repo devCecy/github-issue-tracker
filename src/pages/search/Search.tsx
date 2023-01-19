@@ -3,6 +3,7 @@ import { BASE_URL, TOKEN } from "src/utils/environment";
 import React, { lazy, Suspense, useState } from "react";
 import { useEffect } from "react";
 import { SearchResult } from "src/interfaces/search";
+import { PER_PAGE } from "src/constants/pagination";
 
 // style
 import styled from "styled-components";
@@ -82,7 +83,6 @@ const Search = () => {
 	 * @param repo
 	 */
 	const getRepos = (repo: string) => {
-		const PER_PAGE = 10;
 		const currentOrder = "desc"; // desc | asc
 		axios
 			.get(

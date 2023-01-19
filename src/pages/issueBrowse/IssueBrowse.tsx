@@ -4,6 +4,7 @@ import { Issue } from "src/interfaces/issues";
 import { BASE_URL, TOKEN } from "src/utils/environment";
 import { useRecoilValue } from "recoil";
 import { bookmarkArrayState } from "src/atom/bookmarkState";
+import { PER_PAGE } from "src/constants/pagination";
 
 // style
 import styled from "styled-components";
@@ -55,7 +56,7 @@ const IssueBrowse = () => {
 	 * 로컬스토리지에 저장된 레포지토리 여부에 따라 이슈 리스트 호출을 결정합니다.
 	 */
 	useEffect(() => {
-		if (!currentRepo) return setHasBookmarkedRepo(false);
+		if (!currentRepo || !currentPage) return setHasBookmarkedRepo(false);
 		setHasBookmarkedRepo(true);
 		getIssues(currentRepo, 1);
 
@@ -66,6 +67,7 @@ const IssueBrowse = () => {
 	 * currentPage가 업데이트되면 이슈 리스를 호출합니다.
 	 */
 	useEffect(() => {
+		if (!currentRepo || !currentPage) return;
 		getIssues(currentRepo, currentPage);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentPage]);
@@ -75,7 +77,6 @@ const IssueBrowse = () => {
 	 * @param name
 	 */
 	const getIssues = (url: string, page: number) => {
-		const PER_PAGE = 10;
 		const currentSorting = "updated"; // created | updated |comments
 		const currentDirection = "desc"; // desc | asc
 
