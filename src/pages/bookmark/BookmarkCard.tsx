@@ -10,12 +10,12 @@ const BookmarkCard = ({ repo }: { repo: string }) => {
 
 	return (
 		<CardContainer>
-			<Button aria-label="bookmark">
-				<BookmarkIcon
-					id={repo}
-					fontSize="large"
-					onClick={(e) => handleBookmarkDelete(e.currentTarget.id)}
-				/>
+			<Button
+				aria-label="bookmark"
+				id={repo}
+				onClick={(e) => handleBookmarkDelete(e.currentTarget.id)}
+			>
+				<BookmarkIcon fontSize="large" />
 			</Button>
 			<Title>{repo}</Title>
 		</CardContainer>
@@ -36,7 +36,7 @@ const CardContainer = styled.div`
 	margin-bottom: 2rem;
 `;
 
-const Title = styled.div`
+const Title = styled.h1`
 	font-size: ${({ theme }) => theme.typography.body1.fontSize};
 	font-weight: 500;
 `;
