@@ -12,7 +12,8 @@ import SearchIcon from "@mui/icons-material/Search";
 
 // components
 import BoxSkeleton from "src/components/BoxSkeleton";
-const PaginationBar = lazy(() => import("src/components/PaginationBar"));
+import PaginationBar from "src/components/PaginationBar";
+
 const SearchCard = lazy(() => import("./SearchCard"));
 
 const Search = () => {
@@ -155,15 +156,12 @@ const Search = () => {
 						);
 					})}
 				</SearchCardBox>
-
-				<Suspense fallback={null}>
-					{/* 페이지네이션 */}
-					<PaginationBar
-						totalPage={Math.ceil(totalResultCount / 10)}
-						handlePageChange={handlePageChange}
-						isChanged={isFormSubmitted}
-					/>
-				</Suspense>
+				{/* 페이지네이션 */}
+				<PaginationBar
+					totalPage={Math.ceil(totalResultCount / 10)}
+					handlePageChange={handlePageChange}
+					isChanged={isFormSubmitted}
+				/>
 			</Inner>
 		</Container>
 	);
