@@ -55,7 +55,6 @@ npm run serve
 
 - `react-lazyload` : 이미지 지연로드 기능을 제공합니다.
 - `timeago.js` : 현재를 기준으로 제공하는 시간이 얼마나 지났는지 변환하는 기능을 제공합니다. ex) 1 day ago
-- `env-cmd` : env 파일의 환경을 사용하여 script 실행할 수 있습니다.
 - `styled-components` : css in js 방식으로 스타일링 합니다.
 - `@mui/material` / `@mui/icons-material` : React UI, Icon을 제공합니다.
 - `recoil` : 전역상태를 관리합니다.
