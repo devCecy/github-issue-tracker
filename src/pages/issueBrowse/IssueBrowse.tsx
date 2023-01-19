@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import axios from "axios";
 import { Issue } from "src/interfaces/issues";
-import { BASE_URL, TOKEN } from "src/utils/environment";
+import { BASE_URL } from "src/utils/environment";
 import { useRecoilValue } from "recoil";
 import { bookmarkArrayState } from "src/atom/bookmarkState";
 import { PER_PAGE } from "src/constants/pagination";
@@ -88,7 +88,7 @@ const IssueBrowse = () => {
 				`${BASE_URL}/repos/${url}/issues?per_page=${PER_PAGE}&page=${page}&sort=${currentSorting}&directions=${currentDirection}&state=all`,
 				{
 					headers: {
-						Authorization: `token ${TOKEN}`,
+						// Authorization: `token ${TOKEN}`,
 					},
 				}
 			)

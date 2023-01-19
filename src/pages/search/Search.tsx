@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL, TOKEN } from "src/utils/environment";
+import { BASE_URL } from "src/utils/environment";
 import React, { lazy, Suspense, useState } from "react";
 import { useEffect } from "react";
 import { SearchResult } from "src/interfaces/search";
@@ -90,7 +90,7 @@ const Search = () => {
 				`${BASE_URL}/search/repositories?q=${repo}&per_page=${PER_PAGE}&page=${currentPage}&order=${currentOrder}`,
 				{
 					headers: {
-						Authorization: `token ${TOKEN}`,
+						// Authorization: `token ${TOKEN}`,
 					},
 				}
 			)
