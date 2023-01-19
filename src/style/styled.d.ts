@@ -1,4 +1,3 @@
-// import "styled-components";
 declare module "@mui/material/styles" {
 	export interface Theme {
 		palette: {
